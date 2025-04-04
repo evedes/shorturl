@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:17
+    hostname: db
+    container_name: shorturl-db
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=shorturl
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    cap_add:
+      - SYS_NICE # disables logs `mbind: Operation not permitted`
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "root", "-d", "shorturl"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  postgres_data:
