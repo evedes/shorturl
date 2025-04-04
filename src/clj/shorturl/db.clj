@@ -8,9 +8,7 @@
             :dbname (env :DBNAME)
             :host (env :HOST)
             :user (env :USER)
-            :password (env :PASSWORD)
-            :ssl (env :SSL)
-            :sslfactory (env :SSLFACTORY)})
+            :password (env :PASSWORD) })
 
 (defn query [q]
   (j/query pg-db q))
@@ -30,3 +28,15 @@
                   (where [:= :slug slug])
                   (sql/format)))
        first :url))
+
+(comment
+  (query (-> (select :*)
+             (from :redirects)
+             (sql/format)))
+  (insert! (-> (insert-into :redirects)
+               (columns :slug :url)
+               (values
+                [["abc" "https://github.com/seancorfield/honeysql"]])
+               (sql/format)))
+  (insert-redirect! "dkj" "https://github.com/clojure/java.jdbc")
+  (get-url "abc"))

@@ -1,5 +1,11 @@
-.calva
+**/.DS_Store
+**/node_modules
+
+.shadow-cljs
+
 .clj-kondo
 .cpcache
 .lsp
 .nrepl-port
+.calva
+**/assets/js
