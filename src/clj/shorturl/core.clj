@@ -5,7 +5,11 @@
             [muuntaja.core :as m]
             [reitit.ring.middleware.muuntaja :as muuntaja]
             [shorturl.db :as db]
-            [shorturl.slug :refer [generate-slug]]))
+            [shorturl.slug :refer [generate-slug]]
+            [clojure.java.io :as io]))
+
+(defn index []
+  (slurp (io/resource "public/index.html")))
 
 (defn redirect [req]
   (let [slug (get-in req [:path-params :slug])
@@ -18,7 +22,7 @@
   (let [url (get-in req [:body-params :url])
         slug (generate-slug)]
     (db/insert-redirect! slug url)
-    (r/response (str "Created slug " slug))))
+    (r/response {:slug slug})))
 
 (def app
   (ring/ring-handler
@@ -26,7 +30,9 @@
     ["/"
      [":slug/" redirect]
      ["api/"
-      ["redirect/" {:post create-redirect}]]]
+      ["redirect/" {:post create-redirect}]]
+     ["assets/*" (ring/create-resource-handler {:root "public/assets"})]
+     ["" {:handler (fn [req] {:body (index) :status 200})}]]
     {:data {:muuntaja m/instance
             :middleware [muuntaja/format-middleware]}})))
 

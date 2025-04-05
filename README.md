@@ -5,6 +5,10 @@ A URL Shortener App
 
 `npx shadow-cljs watch app`
 
+## HOW TO RUN TAILWIND WATCHER?
+
+`npx tailwindcss -i global.css -o ./resources/public/assets/css/output.css --watch`
+
 ## DATABASE
 
 ```bash
